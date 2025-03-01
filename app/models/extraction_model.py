@@ -15,8 +15,8 @@ class Section:
         sections_collection.insert_one(section_data)
 
     @staticmethod
-    def list_sections_by_code_name(code_name):
-        return list(sections_collection.find({"code_name": code_name}))
+    def find_by_code_name(code_name):
+        return list(sections_collection.find({"code_name": code_name}, {"section_name": 1}))
 
     @staticmethod
     def find_section_content(code_name, section_name):

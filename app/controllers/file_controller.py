@@ -8,16 +8,15 @@ def upload_file():
     file = request.files["file"]
     username = session.get("username")
     if not username:
-        return jsonify({"error": "Username required, please log in"}), 401
+        return jsonify({"error": "User not logged in"}), 401
 
-    # Input validation
-    if not file.filename:
-        return jsonify({"error": "No selected file"}), 400
-    if not file.filename.lower().endswith('.pdf'):
-        return jsonify({"error": "Only PDF files are allowed"}), 400
+    upload_folder = "uploads"
+    os.makedirs(upload_folder, exist_ok=True)
+    file_path = os.path.join(upload_folder, file.filename)
+    file.save(file_path)
 
     try:
-        result = FileService.save_document(file, username)
+        result = FileService.save_document(file_path, username, file.filename)
         return jsonify(result), 201
     except ValueError as e:
         return jsonify({"error": str(e)}), 400

@@ -14,7 +14,8 @@ class AuthService:
     def login(username, password):
         user = User.find_by_username(username)
         if user and user["password"] == password:  # In production, hash passwords
-            return user
+            session["username"] = username
+            return {"message": "login successful"}
         raise ValueError("Invalid credentials")
 
     @staticmethod

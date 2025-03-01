@@ -6,12 +6,11 @@ class Document:
         self.filing_date = filing_date
         self.quarter_annual = quarter_annual
         self.year = year
-        self.form = form
+        self.form = form  # Now dynamic (10-Q or 10-K)
         self.username = username
         self.code_name = self.generate_code_name()
 
     def generate_code_name(self):
-        # Example: "COMPANY_YEAR_QUARTER_FORM"
         return f"{self.company_name}_{self.year}_{self.quarter_annual}_{self.form}".replace(" ", "_").upper()
 
     def save(self):
@@ -27,7 +26,6 @@ class Document:
         documents_collection.insert_one(doc_data)
 
     def save_with_filename(self, doc_data):
-        # Custom method to save document with additional fields like filename
         documents_collection.insert_one(doc_data)
 
     @staticmethod
@@ -36,6 +34,5 @@ class Document:
 
     @staticmethod
     def list_all():
-        # Exclude _id and return filename and code_name
         docs = documents_collection.find({}, {"_id": 0, "filename": 1, "code_name": 1})
         return [{"filename": doc.get("filename", ""), "code": doc["code_name"]} for doc in docs]
